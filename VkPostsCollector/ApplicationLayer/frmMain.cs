@@ -43,12 +43,14 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-
+            btnStart.Enabled = false;
+            btnStop.Enabled = true;
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-
+            btnStart.Enabled = true;
+            btnStop.Enabled = false;
         }
 
         #endregion
