@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace VkPostsCollector
+namespace ApplicationLayer.VkPostsCollector
 {
-    public partial class frmMain : Form
+    public partial class frmGroups : Form
     {
-        public frmMain()
+        public frmGroups()
         {
             InitializeComponent();
         }
