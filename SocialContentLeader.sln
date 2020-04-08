@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.539
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VkPostsCollector", "VkPostsCollector\VkPostsCollector.csproj", "{BD387273-3337-4C0E-86F9-8F2D4E814450}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD387273-3337-4C0E-86F9-8F2D4E814450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD387273-3337-4C0E-86F9-8F2D4E814450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD387273-3337-4C0E-86F9-8F2D4E814450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD387273-3337-4C0E-86F9-8F2D4E814450}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {259D54D7-96AE-4C3F-9F79-4553E0225EBE}
+	EndGlobalSection
+EndGlobal
