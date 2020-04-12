@@ -87,6 +87,7 @@ namespace VkPostsCollector.DataAccessLayer
                 webRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
                 webRequest.UserAgent = GoogleUserAgent;
                 if (useProxy) webRequest.Proxy = myproxy;
+                else webRequest.Proxy = null;
                 webRequest.Method = "POST";
                 webRequest.ProtocolVersion = HttpVersion.Version11;
                 webRequest.AllowAutoRedirect = false;

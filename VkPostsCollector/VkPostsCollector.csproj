@@ -49,26 +49,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationLayer\frmGroups.cs">
+    <Compile Include="DataAccessLayer\API\VkAPI.cs" />
+    <Compile Include="ApplicationLayer\Common\Converters.cs" />
+    <Compile Include="ApplicationLayer\Forms\frmGroups.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ApplicationLayer\frmGroups.Designer.cs">
+    <Compile Include="ApplicationLayer\Forms\frmGroups.Designer.cs">
       <DependentUpon>frmGroups.cs</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationLayer\frmMain.cs">
+    <Compile Include="ApplicationLayer\Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ApplicationLayer\frmMain.Designer.cs">
+    <Compile Include="ApplicationLayer\Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="BusinessLayer\ObjectsDTO.cs" />
     <Compile Include="DataAccessLayer\WebData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ApplicationLayer\frmGroups.resx">
+    <EmbeddedResource Include="ApplicationLayer\Forms\frmGroups.resx">
       <DependentUpon>frmGroups.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ApplicationLayer\frmMain.resx">
+    <EmbeddedResource Include="ApplicationLayer\Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
