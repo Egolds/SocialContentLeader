@@ -49,6 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationLayer\Forms\frmImages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplicationLayer\Forms\frmImages.Designer.cs">
+      <DependentUpon>frmImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataAccessLayer\API\AdmitadAPI.cs" />
+    <Compile Include="DataAccessLayer\API\EpnAPI.cs" />
     <Compile Include="DataAccessLayer\API\VkAPI.cs" />
     <Compile Include="ApplicationLayer\Common\Converters.cs" />
     <Compile Include="ApplicationLayer\Forms\frmGroups.cs">
@@ -69,6 +77,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ApplicationLayer\Forms\frmGroups.resx">
       <DependentUpon>frmGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApplicationLayer\Forms\frmImages.resx">
+      <DependentUpon>frmImages.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ApplicationLayer\Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

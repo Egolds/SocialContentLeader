@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace VkPostsCollector.DataAccessLayer
         private const string GoogleUserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
         private WebProxy myproxy;
         private bool useProxy;
+
+        public WebHeaderCollection AdditionalHeaders = new WebHeaderCollection();
 
         public WebData(WebProxy proxy = null)
         {
@@ -40,6 +43,7 @@ namespace VkPostsCollector.DataAccessLayer
                 webRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
                 webRequest.UserAgent = GoogleUserAgent;
                 if (useProxy) webRequest.Proxy = myproxy;
+                else webRequest.Proxy = null;
                 webRequest.Method = "GET";
                 webRequest.ProtocolVersion = HttpVersion.Version11;
                 webRequest.AllowAutoRedirect = false;
@@ -51,7 +55,7 @@ namespace VkPostsCollector.DataAccessLayer
 
                 return new HttpResponse(webResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -125,12 +129,84 @@ namespace VkPostsCollector.DataAccessLayer
             }
         }
 
+        public HttpResponse POST(string host, string param)
+        {
+            return POST(host, null, param);
+        }
+        public HttpResponse POST(string host, CookieContainer cc, string param)
+        {
+            HttpWebResponse webResponse = null;
+            if (cc == null) cc = new CookieContainer();
+
+            try
+            {
+                if (param.Length == 0)
+                    throw new ArgumentNullException();
+
+                byte[] parameters = Encoding.ASCII.GetBytes(param);
+
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(host);
+                webRequest.Headers = GetHeader();
+
+                webRequest.Headers.Add("", "");
+
+                webRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                webRequest.UserAgent = GoogleUserAgent;
+                if (useProxy) webRequest.Proxy = myproxy;
+                else webRequest.Proxy = null;
+                webRequest.Method = "POST";
+                webRequest.ProtocolVersion = HttpVersion.Version11;
+                webRequest.AllowAutoRedirect = false;
+                webRequest.CookieContainer = cc;
+                webRequest.ProtocolVersion = HttpVersion.Version10;
+                webRequest.KeepAlive = true;
+                webRequest.ContentType = "application/json";
+                webRequest.ContentLength = parameters.Length;
+                webRequest.ServicePoint.Expect100Continue = false;
+                webRequest.ServerCertificateValidationCallback = AcceptAllCertifications;
+
+                using (var requestStream = new StreamWriter(webRequest.GetRequestStream()))
+                {
+                    requestStream.Write(parameters);
+                }
+
+                webResponse = (HttpWebResponse)webRequest.GetResponse();
+
+                return new HttpResponse(webResponse);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+                return null;
+            }
+            finally
+            {
+                if (webResponse != null)
+                {
+                    webResponse.Close();
+                    cc.Add(webResponse.Cookies);
+                }
+
+
+            }
+        }
+
         private WebHeaderCollection GetHeader()
         {
             WebHeaderCollection Headers = new WebHeaderCollection();
             Headers = new WebHeaderCollection();
             Headers.Add("Accept-Language", "en-US,en;q=0.8,en-US;q=0.5,en;q=0.3");
             Headers.Add("Accept-Encoding", "gzip, deflate");
+
+            if(AdditionalHeaders.Count > 0)
+            {
+                foreach(NameValueCollection nvc in AdditionalHeaders)
+                {
+                    Headers.Add(nvc);
+                }
+            }
+
             return Headers;
         }
 

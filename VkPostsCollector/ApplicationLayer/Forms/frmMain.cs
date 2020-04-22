@@ -7,17 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
 using VkPostsCollector.ApplicationLayer.Common;
 using VkPostsCollector.BusinessLayer;
 using System.Diagnostics;
 using VkPostsCollector.DataAccessLayer.API;
+using VkPostsCollector.ApplicationLayer.Forms;
 
 namespace ApplicationLayer.VkPostsCollector
 {
     public partial class frmMain : Form
     {
-        private string TestGroup = "ali_stallions";
+        private string TestGroup = "top_ali_shmot";
         private const string AccessToken = "20e0e7e620e0e7e620e0e7e6e420901b4d220e020e0e7e67e72e2ea810c2598e177d57b";
 
         private BackgroundWorker worker;
@@ -104,7 +104,7 @@ namespace ApplicationLayer.VkPostsCollector
 
                 pRow.Cells["colGroupName"].Value = publication.GroupName;
                 pRow.Cells["colCreated"].Value = publication.Created;
-                pRow.Cells["colType"].Value = publication.PostType;
+                pRow.Cells["colType"].Value = publication.PostType + (publication.IsRepost ? " (Repost)" : string.Empty);
                 pRow.Cells["colGroupLink"].Value = publication.GroupLink;
                 pRow.Cells["colPublicationLink"].Value = publication.PostLink;
                 pRow.Cells["colLikes"].Value = publication.Likes;
@@ -116,7 +116,9 @@ namespace ApplicationLayer.VkPostsCollector
                 pRow.Cells["colExistsAttachments"].Value = Converters.BoolToText(publication.ExistsAttachments);
                 pRow.Cells["colExistsSigner"].Value = Converters.BoolToText(publication.ExistsSigner);
                 pRow.Cells["colSignerLink"].Value = publication.SignerLink;
-            }));
+                pRow.Cells["colLinks"].Value = string.Join(" ", publication.Links);
+                pRow.Cells["colExistsLinks"].Value = Converters.BoolToText(publication.ExistsLinks);
+        }));
         }
 
         private void UpdatePostsCount()
@@ -178,11 +180,14 @@ namespace ApplicationLayer.VkPostsCollector
 
                 if (dgvPosts.Columns[e.ColumnIndex].GetType() == typeof(DataGridViewLinkColumn))
                 {
-                    string link = row.Cells[e.ColumnIndex].Value.ToString();
-                    if (DialogResult.Yes == MessageBox.Show("Открыть ссылку?\r\n" + link, "", MessageBoxButtons.YesNo))
-                        Process.Start(link);
+                    if (row.Cells[e.ColumnIndex].Value != null)
+                    {
+                        string link = row.Cells[e.ColumnIndex].Value.ToString();
+                        if (DialogResult.Yes == MessageBox.Show("Открыть ссылку?\r\n" + link, "", MessageBoxButtons.YesNo))
+                            Process.Start(link);
 
-                    return;
+                        return;
+                    }
                 }
                 else
                 {
@@ -264,11 +269,20 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void tsmiShowImages_Click(object sender, EventArgs e)
         {
+            PublicationDTO publication = (PublicationDTO)dgvPosts.SelectedRows[0].Tag;
 
+            //MessageBox.Show(string.Join("\r\n", publication.ImageLinks), "Изображения");
+            frmImages imagesPanel = new frmImages();
+            imagesPanel.AddImageRange(publication.ImageLinks.ToArray());
+            imagesPanel.Show();
         }
+
 
         #endregion
 
-
+        private void btnTesting_Click(object sender, EventArgs e)
+        {
+            string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", "https://aliexpress.ru/item/32822822772.html");
+        }
     }
 }

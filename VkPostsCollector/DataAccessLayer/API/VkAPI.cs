@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
@@ -30,7 +31,7 @@ namespace VkPostsCollector.DataAccessLayer.API
 
             int RequstedQuantity = quantity > 100 ? 100 : quantity;
 
-            var vkParams = new NameValueCollection
+            NameValueCollection vkParams = new NameValueCollection
             {
                 { "access_token", AccessToken },
                 { "v", "5.103"},
@@ -41,6 +42,9 @@ namespace VkPostsCollector.DataAccessLayer.API
             if(offset > 0) vkParams.Add("offset", offset.ToString());
 
             HttpResponse response = https.POST(ApiPage + method, vkParams);
+            if (response == null)
+                return null;
+
             JObject JsonObject = JObject.Parse(response.Content);
 
 
@@ -77,6 +81,9 @@ namespace VkPostsCollector.DataAccessLayer.API
                 publication.PostLink = postLink;
                 publication.Text = item["text"].ToString();
 
+                if (item.TryGetValue("copy_history", out JToken JsonCopyHistory))
+                    publication.IsRepost = true;
+
                 if (item.TryGetValue("is_pinned", out JToken JsonIsPinned))
                     publication.IsPinned = Converters.StringBitToBool(JsonIsPinned.Value<string>());
 
@@ -94,10 +101,38 @@ namespace VkPostsCollector.DataAccessLayer.API
                 publication.Reposts = decimal.Parse(item["reposts"]["count"].ToString());
                 publication.Views = decimal.Parse(item["views"]["count"].ToString());
 
+                string[] paragraphs = Regex.Split(publication.Text, "\n");
+                foreach (string paragraph in paragraphs)
+                {
+                    if (paragraph.Contains("http"))
+                    {
+                        string[] words = Regex.Split(paragraph, " ");
+                        foreach (string word in words)
+                        {
+                            string link = Regex.Match(word, "http([^(]*)").Groups[0].Value;
+                            if (string.IsNullOrEmpty(link) == false)
+                                publication.Links.Add(link);
+                        }
+                    }
+                }
+                publication.ExistsLinks = publication.Links.Count > 0;
+
                 publication.ExistsAttachments = item.TryGetValue("attachments", out JToken JsonAttachments);
                 if (publication.ExistsAttachments)
                 {
                     // JsonAttachments
+                    foreach(JToken attachment in JsonAttachments)
+                    {
+                        if (attachment["type"].ToString().Equals("photo") == false) continue;
+
+                        if (publication.ExistsImages == false)
+                        {
+                            publication.ExistsImages = true;
+                        }
+
+                        JToken photo = attachment["photo"]["sizes"].Last;
+                        publication.ImageLinks.Add(photo["url"].ToString());
+                    }
                 }
 
                 posts.Add(publication);

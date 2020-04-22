@@ -18,9 +18,13 @@ namespace VkPostsCollector.BusinessLayer
 
         public DateTime Created { get; set; }
         public string PostType { get; set; }
+        public bool IsRepost { get; set; }
         public string PostLink { get; set; }
 
         public string Text { get; set; }
+
+        public List<string> Links { get; set; } = new List<string>();
+        public bool ExistsLinks { get; set; }
 
         /// <summary>
         /// Информация о том, что запись закреплена
@@ -47,6 +51,11 @@ namespace VkPostsCollector.BusinessLayer
         /// </summary>
         public bool ExistsAttachments { get; set; }
 
+        /// <summary>
+        /// Информация о том, содержит ли запись фотографии
+        /// </summary>
+        public bool ExistsImages { get; set; }
+
         public List<string> ImageLinks { get; set; } = new List<string>();
 
         public decimal Comments { get; set; }
@@ -58,5 +67,14 @@ namespace VkPostsCollector.BusinessLayer
     public class GroupDTO
     {
         // TODO...
+    }
+
+    public class AuthEpnDTO
+    {
+        public string ssid_token { get; set; }
+
+        public string access_token { get; set; }
+        public string token_type { get; set; }
+        public string refresh_token { get; set; }
     }
 }

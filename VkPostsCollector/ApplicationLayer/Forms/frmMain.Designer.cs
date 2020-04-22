@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.tlpHeader = new System.Windows.Forms.TableLayoutPanel();
             this.btnFiltres = new System.Windows.Forms.Button();
@@ -45,6 +45,9 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.btnTesting = new System.Windows.Forms.Button();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
@@ -53,8 +56,6 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tlpDataGrid = new System.Windows.Forms.TableLayoutPanel();
             this.dgvPosts = new System.Windows.Forms.DataGridView();
-            this.lblCount = new System.Windows.Forms.Label();
-            this.cmsPostsColumns = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.colGroupName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,9 +70,14 @@
             this.colExistsAttachments = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colExistsSigner = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSignerLink = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.colExistsLinks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLinks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblCount = new System.Windows.Forms.Label();
+            this.cmsPostsColumns = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmsPost = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiShowPostText = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowImages = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.tlpMain.SuspendLayout();
             this.tlpHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).BeginInit();
@@ -223,6 +229,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBox9);
+            this.panel1.Controls.Add(this.checkBox8);
+            this.panel1.Controls.Add(this.checkBox7);
+            this.panel1.Controls.Add(this.btnTesting);
             this.panel1.Controls.Add(this.checkBox6);
             this.panel1.Controls.Add(this.checkBox5);
             this.panel1.Controls.Add(this.checkBox4);
@@ -231,8 +241,39 @@
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Location = new System.Drawing.Point(700, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(223, 295);
+            this.panel1.Size = new System.Drawing.Size(223, 398);
             this.panel1.TabIndex = 1;
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.Location = new System.Drawing.Point(13, 268);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(157, 19);
+            this.checkBox8.TabIndex = 8;
+            this.checkBox8.Text = "Фильтр ссылок (домен)";
+            this.checkBox8.UseVisualStyleBackColor = true;
+            // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.Location = new System.Drawing.Point(13, 243);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(193, 19);
+            this.checkBox7.TabIndex = 7;
+            this.checkBox7.Text = "Макс. кол-во ссылок в записи";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // btnTesting
+            // 
+            this.btnTesting.Location = new System.Drawing.Point(145, 372);
+            this.btnTesting.Name = "btnTesting";
+            this.btnTesting.Size = new System.Drawing.Size(75, 23);
+            this.btnTesting.TabIndex = 6;
+            this.btnTesting.Text = "test";
+            this.btnTesting.UseVisualStyleBackColor = true;
+            this.btnTesting.Visible = false;
+            this.btnTesting.Click += new System.EventHandler(this.btnTesting_Click);
             // 
             // checkBox6
             // 
@@ -335,7 +376,9 @@
             this.colMarkedAsAds,
             this.colExistsAttachments,
             this.colExistsSigner,
-            this.colSignerLink});
+            this.colSignerLink,
+            this.colExistsLinks,
+            this.colLinks});
             this.dgvPosts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvPosts.GridColor = System.Drawing.Color.MediumTurquoise;
             this.dgvPosts.Location = new System.Drawing.Point(3, 3);
@@ -343,8 +386,8 @@
             this.dgvPosts.Name = "dgvPosts";
             this.dgvPosts.ReadOnly = true;
             this.dgvPosts.RowHeadersVisible = false;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.Color.Gray;
-            this.dgvPosts.RowsDefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.Gray;
+            this.dgvPosts.RowsDefaultCellStyle = dataGridViewCellStyle12;
             this.dgvPosts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPosts.Size = new System.Drawing.Size(685, 370);
             this.dgvPosts.TabIndex = 0;
@@ -354,25 +397,6 @@
             this.dgvPosts.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvPosts_RowsAdded);
             this.dgvPosts.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvPosts_RowsRemoved);
             this.dgvPosts.SelectionChanged += new System.EventHandler(this.dgvPosts_SelectionChanged);
-            // 
-            // lblCount
-            // 
-            this.lblCount.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblCount.AutoSize = true;
-            this.lblCount.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblCount.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblCount.Location = new System.Drawing.Point(3, 383);
-            this.lblCount.Name = "lblCount";
-            this.lblCount.Size = new System.Drawing.Size(99, 15);
-            this.lblCount.TabIndex = 1;
-            this.lblCount.Text = "Всего записей: 0";
-            // 
-            // cmsPostsColumns
-            // 
-            this.cmsPostsColumns.Name = "cmsPosts";
-            this.cmsPostsColumns.ShowCheckMargin = true;
-            this.cmsPostsColumns.ShowImageMargin = false;
-            this.cmsPostsColumns.Size = new System.Drawing.Size(61, 4);
             // 
             // colGroupName
             // 
@@ -385,9 +409,9 @@
             // colCreated
             // 
             this.colCreated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle19.Format = "d";
-            dataGridViewCellStyle19.NullValue = null;
-            this.colCreated.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle7.Format = "g";
+            dataGridViewCellStyle7.NullValue = null;
+            this.colCreated.DefaultCellStyle = dataGridViewCellStyle7;
             this.colCreated.HeaderText = "Дата публикации";
             this.colCreated.MinimumWidth = 100;
             this.colCreated.Name = "colCreated";
@@ -426,10 +450,10 @@
             // colLikes
             // 
             this.colLikes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle20.Format = "N0";
-            dataGridViewCellStyle20.NullValue = null;
-            this.colLikes.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            dataGridViewCellStyle8.NullValue = null;
+            this.colLikes.DefaultCellStyle = dataGridViewCellStyle8;
             this.colLikes.HeaderText = "Кол-во лайков";
             this.colLikes.MinimumWidth = 100;
             this.colLikes.Name = "colLikes";
@@ -439,10 +463,10 @@
             // colReposts
             // 
             this.colReposts.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle21.Format = "N0";
-            dataGridViewCellStyle21.NullValue = null;
-            this.colReposts.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle9.Format = "N0";
+            dataGridViewCellStyle9.NullValue = null;
+            this.colReposts.DefaultCellStyle = dataGridViewCellStyle9;
             this.colReposts.HeaderText = "Кол-во репостов";
             this.colReposts.MinimumWidth = 100;
             this.colReposts.Name = "colReposts";
@@ -452,10 +476,10 @@
             // colComments
             // 
             this.colComments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle22.Format = "N0";
-            dataGridViewCellStyle22.NullValue = null;
-            this.colComments.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N0";
+            dataGridViewCellStyle10.NullValue = null;
+            this.colComments.DefaultCellStyle = dataGridViewCellStyle10;
             this.colComments.HeaderText = "Кол-во комментариев";
             this.colComments.MinimumWidth = 100;
             this.colComments.Name = "colComments";
@@ -465,10 +489,10 @@
             // colViews
             // 
             this.colViews.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle23.Format = "N0";
-            dataGridViewCellStyle23.NullValue = null;
-            this.colViews.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.Format = "N0";
+            dataGridViewCellStyle11.NullValue = null;
+            this.colViews.DefaultCellStyle = dataGridViewCellStyle11;
             this.colViews.HeaderText = "Кол-во просмотров";
             this.colViews.MinimumWidth = 100;
             this.colViews.Name = "colViews";
@@ -523,13 +547,46 @@
             this.colSignerLink.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.colSignerLink.Width = 114;
             // 
+            // colExistsLinks
+            // 
+            this.colExistsLinks.HeaderText = "В записи есть ссылки";
+            this.colExistsLinks.Name = "colExistsLinks";
+            this.colExistsLinks.ReadOnly = true;
+            this.colExistsLinks.Width = 91;
+            // 
+            // colLinks
+            // 
+            this.colLinks.HeaderText = "Ссылки в записи";
+            this.colLinks.Name = "colLinks";
+            this.colLinks.ReadOnly = true;
+            this.colLinks.Width = 80;
+            // 
+            // lblCount
+            // 
+            this.lblCount.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblCount.AutoSize = true;
+            this.lblCount.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblCount.ForeColor = System.Drawing.Color.ForestGreen;
+            this.lblCount.Location = new System.Drawing.Point(3, 383);
+            this.lblCount.Name = "lblCount";
+            this.lblCount.Size = new System.Drawing.Size(99, 15);
+            this.lblCount.TabIndex = 1;
+            this.lblCount.Text = "Всего записей: 0";
+            // 
+            // cmsPostsColumns
+            // 
+            this.cmsPostsColumns.Name = "cmsPosts";
+            this.cmsPostsColumns.ShowCheckMargin = true;
+            this.cmsPostsColumns.ShowImageMargin = false;
+            this.cmsPostsColumns.Size = new System.Drawing.Size(61, 4);
+            // 
             // cmsPost
             // 
             this.cmsPost.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiShowPostText,
             this.tsmiShowImages});
             this.cmsPost.Name = "cmsPost";
-            this.cmsPost.Size = new System.Drawing.Size(252, 70);
+            this.cmsPost.Size = new System.Drawing.Size(252, 48);
             // 
             // tsmiShowPostText
             // 
@@ -544,6 +601,16 @@
             this.tsmiShowImages.Size = new System.Drawing.Size(251, 22);
             this.tsmiShowImages.Text = "Просмотр изображения";
             this.tsmiShowImages.Click += new System.EventHandler(this.tsmiShowImages_Click);
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.AutoSize = true;
+            this.checkBox9.Location = new System.Drawing.Point(13, 293);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(163, 34);
+            this.checkBox9.TabIndex = 9;
+            this.checkBox9.Text = "Учитывать соотношение\r\nлайков/просмотров";
+            this.checkBox9.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
@@ -593,6 +660,10 @@
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.ContextMenuStrip cmsPost;
+        private System.Windows.Forms.ToolStripMenuItem tsmiShowPostText;
+        private System.Windows.Forms.ToolStripMenuItem tsmiShowImages;
+        private System.Windows.Forms.Button btnTesting;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGroupName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn colType;
@@ -607,9 +678,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colExistsAttachments;
         private System.Windows.Forms.DataGridViewTextBoxColumn colExistsSigner;
         private System.Windows.Forms.DataGridViewLinkColumn colSignerLink;
-        private System.Windows.Forms.ContextMenuStrip cmsPost;
-        private System.Windows.Forms.ToolStripMenuItem tsmiShowPostText;
-        private System.Windows.Forms.ToolStripMenuItem tsmiShowImages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colExistsLinks;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLinks;
+        private System.Windows.Forms.CheckBox checkBox8;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.CheckBox checkBox9;
     }
 }
 
