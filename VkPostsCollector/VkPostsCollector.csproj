@@ -49,14 +49,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationLayer\Configs.cs" />
     <Compile Include="ApplicationLayer\Forms\frmImages.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationLayer\Forms\frmImages.Designer.cs">
       <DependentUpon>frmImages.cs</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationLayer\UserControls\GroupItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ApplicationLayer\UserControls\GroupItem.Designer.cs">
+      <DependentUpon>GroupItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessLayer\PublicationCreator.cs" />
     <Compile Include="DataAccessLayer\API\AdmitadAPI.cs" />
+    <Compile Include="DataAccessLayer\API\ClckAPI.cs" />
     <Compile Include="DataAccessLayer\API\EpnAPI.cs" />
+    <Compile Include="DataAccessLayer\API\IsgdAPI.cs" />
     <Compile Include="DataAccessLayer\API\VkAPI.cs" />
     <Compile Include="ApplicationLayer\Common\Converters.cs" />
     <Compile Include="ApplicationLayer\Forms\frmGroups.cs">
@@ -83,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApplicationLayer\Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApplicationLayer\UserControls\GroupItem.resx">
+      <DependentUpon>GroupItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

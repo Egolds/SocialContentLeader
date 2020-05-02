@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+// DTO - Data Transfer Objects
 
 namespace VkPostsCollector.BusinessLayer
 {
-    public class PublicationDTO
+    public class VkPublicationDTO
     {
         public string Id { get; set; }
 
         public GroupDTO Group { get; set; }
-        public string GroupName { get; set; }
-        public string GroupLink { get; set; }
 
         public DateTime Created { get; set; }
         public string PostType { get; set; }
@@ -64,9 +65,26 @@ namespace VkPostsCollector.BusinessLayer
         public decimal Views { get; set; }
     }
 
+    public class TelegramPublicationDTO
+    {
+        public string Text { get; set; }
+        public string PhotoUrl { get; set; }
+        public List<string> Links { get; set; } = new List<string>();
+    }
+
+    [Serializable]
     public class GroupDTO
     {
-        // TODO...
+        public string URL
+        {
+            get => "https://vk.com/" + ScreenName;
+        }
+        
+        public string ScreenName { get; set; }
+
+        public string Name { get; set; }
+
+        public string PhotoUrl { get; set; }
     }
 
     public class AuthEpnDTO

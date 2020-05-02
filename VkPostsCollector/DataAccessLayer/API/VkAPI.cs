@@ -17,14 +17,14 @@ namespace VkPostsCollector.DataAccessLayer.API
     {
         private const string ApiPage = "https://api.vk.com/method/";
 
-        public static List<PublicationDTO> GetWallPosts(string domain, int quantity, string AccessToken, WebProxy proxy = null)
+        public static List<VkPublicationDTO> GetWallPosts(GroupDTO Group, int quantity, string AccessToken, WebProxy proxy = null)
         {
-            return GetWallPosts(domain, quantity, 0, AccessToken, proxy);
+            return GetWallPosts(Group, quantity, 0, AccessToken, proxy);
         }
 
-        public static List<PublicationDTO> GetWallPosts(string domain, int quantity, int offset, string AccessToken, WebProxy proxy = null)
+        public static List<VkPublicationDTO> GetWallPosts(GroupDTO Group, int quantity, int offset, string AccessToken, WebProxy proxy = null)
         {
-            List<PublicationDTO> posts = new List<PublicationDTO>();
+            List<VkPublicationDTO> posts = new List<VkPublicationDTO>();
 
             WebData https = new WebData(proxy);
             string method = "wall.get";
@@ -35,7 +35,7 @@ namespace VkPostsCollector.DataAccessLayer.API
             {
                 { "access_token", AccessToken },
                 { "v", "5.103"},
-                { "domain", domain},
+                { "domain", Group.ScreenName},
                 { "count", RequstedQuantity.ToString()},
                 { "filter", "owner" }
             };
@@ -68,11 +68,12 @@ namespace VkPostsCollector.DataAccessLayer.API
             JToken JOItems = JsonResponse["items"];
             foreach (JObject item in JOItems)
             {
-                PublicationDTO publication = new PublicationDTO();
+                VkPublicationDTO publication = new VkPublicationDTO();
 
-                string postLink = "https://vk.com/" + domain + "?w=wall" + item["from_id"] + "_" + item["id"] + "/all";
+                //string postLink = "https://vk.com/" + domain + "?w=wall" + item["from_id"] + "_" + item["id"] + "/all";
+                string postLink = Group.URL + "?w=wall" + item["from_id"] + "_" + item["id"] + "/all";
 
-                publication.GroupLink = "https://vk.com/" + domain;
+                publication.Group = Group;
 
                 publication.Id = item["id"].ToString();
 
@@ -141,57 +142,62 @@ namespace VkPostsCollector.DataAccessLayer.API
             return posts;
         }
 
-        //private List<Tuple<string, string>> GetWallPostsImagesLinks(string wallPageName, int quantity)
-        //{
-        //    var https = new Https();
-        //    var links = new List<Tuple<string, string>>();
+        public static GroupDTO GetGroup(string UrlOrId, string AccessToken, WebProxy proxy = null)
+        {
+            WebData https = new WebData(proxy);
+            string method = "groups.getById";
 
-        //    const string method = "wall.get";
-        //    var proceedCount = 0;
-        //    while (proceedCount < quantity)
-        //    {
-        //        var curCount = quantity - proceedCount;
-        //        if (curCount > 100) curCount = 100;
-        //        //else curCount = quantity - proceedCount;
-        //        var vkParams = new NameValueCollection
-        //        {
-        //            {"access_token", ServiceKey },
-        //            {"v", "5.103"},
-        //            {"domain", wallPageName},
-        //            {"count", curCount.ToString()},
-        //            {"offset", proceedCount.ToString()}
-        //        };
-        //        var response = https.POST(ApiPage + method, new CookieContainer(), vkParams);
+            string Id = UrlOrId;
+            if (Id.StartsWith("https://vk.com/")) Id = Id.Replace("https://vk.com/", "");
 
-        //        foreach (var jo in JObject.Parse(response.Content)["response"]["items"])
-        //        {
-        //            if (jo["attachments"] == null) continue;
-        //            var imgName = "wallid" + jo["id"];
-        //            var tImageName = imgName;
-        //            var jj = jo["attachments"] ?? jo["copy_history"]["attachments"];
-        //            var attCnt = 1;
-        //            foreach (var jo1 in jj)
-        //            {
-        //                imgName += "_" + attCnt++;
-        //                if (!jo1["type"].ToString().Equals("photo")) continue;
-        //                if (jo1["photo"]["photo_2560"] != null)
-        //                    links.Add(new Tuple<string, string>(imgName, jo1["photo"]["photo_2560"].ToString()));
-        //                else if (jo1["photo"]["photo_1280"] != null)
-        //                    links.Add(new Tuple<string, string>(imgName, jo1["photo"]["photo_1280"].ToString()));
-        //                else if (jo1["photo"]["photo_807"] != null)
-        //                    links.Add(new Tuple<string, string>(imgName, jo1["photo"]["photo_807"].ToString()));
-        //                else if (jo1["photo"]["photo_604"] != null)
-        //                    links.Add(new Tuple<string, string>(imgName, jo1["photo"]["photo_604"].ToString()));
-        //                else links.Add(new Tuple<string, string>(imgName, jo1["photo"]["photo_130"].ToString()));
-        //                imgName = tImageName;
-        //            }
-        //        }
+            NameValueCollection vkParams = new NameValueCollection
+            {
+                { "access_token", AccessToken },
+                { "v", "5.103"},
+                { "group_id", Id}
+            };
 
-        //        proceedCount += curCount;
-        //        parsedCntLabel.Invoke(() => { parsedCntLabel.Text = "Спаршено: " + proceedCount + " из " + quantity; });
-        //        parsedInfo.Invoke(() => { parsedInfo.Text = "(найдено " + links.Count + " изображений)"; });
-        //    }
-        //    return links;
-        //}
+            HttpResponse response = https.POST(ApiPage + method, vkParams);
+            if (response == null)
+                return null;
+
+            JObject JsonObject = JObject.Parse(response.Content);
+
+            if (JsonObject.TryGetValue("response", out JToken JsonResponse) == false)
+            {
+                if (JsonObject.TryGetValue("error", out JToken JsonError))
+                {
+                    string errorCode = JsonError["error_code"].ToString();
+                    string errorMessage = JsonError["error_msg"].ToString();
+
+                    MessageBox.Show($"Ошибка {errorCode}\r\n{errorMessage}");
+                }
+                else
+                {
+                    MessageBox.Show("Неизвестная ошибка!");
+                }
+
+                return null;
+            }
+
+            GroupDTO group = new GroupDTO();
+
+            foreach (JObject item in JsonResponse)
+            {
+                
+                //group.Id = item["id"].ToString();
+                group.Name = item["name"].ToString();
+                group.ScreenName = item["screen_name"].ToString();
+
+                //if (item.TryGetValue("screen_name", out JToken JsonScreenName))
+                //{
+                //    group.ScreenName = item["screen_name"].ToString();
+                //}
+
+                group.PhotoUrl = item["photo_200"].ToString();
+            }
+            
+            return group;
+        }
     }
 }

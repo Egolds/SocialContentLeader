@@ -29,12 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.tlpHeader = new System.Windows.Forms.TableLayoutPanel();
             this.btnFiltres = new System.Windows.Forms.Button();
@@ -45,6 +47,9 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox11 = new System.Windows.Forms.CheckBox();
+            this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.btnTesting = new System.Windows.Forms.Button();
@@ -65,6 +70,7 @@
             this.colReposts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colComments = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colViews = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLikesCTR = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPinned = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMarkedAsAds = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colExistsAttachments = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,7 +83,8 @@
             this.cmsPost = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiShowPostText = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowImages = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.tsmiPublicate = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tlpMain.SuspendLayout();
             this.tlpHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).BeginInit();
@@ -103,7 +110,7 @@
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 58F));
-            this.tlpMain.Size = new System.Drawing.Size(938, 511);
+            this.tlpMain.Size = new System.Drawing.Size(998, 702);
             this.tlpMain.TabIndex = 0;
             // 
             // tlpHeader
@@ -121,7 +128,7 @@
             this.tlpHeader.Name = "tlpHeader";
             this.tlpHeader.RowCount = 1;
             this.tlpHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpHeader.Size = new System.Drawing.Size(938, 35);
+            this.tlpHeader.Size = new System.Drawing.Size(998, 35);
             this.tlpHeader.TabIndex = 0;
             // 
             // btnFiltres
@@ -139,7 +146,6 @@
             // btnAddGroups
             // 
             this.btnAddGroups.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAddGroups.Enabled = false;
             this.btnAddGroups.Location = new System.Drawing.Point(12, 5);
             this.btnAddGroups.Name = "btnAddGroups";
             this.btnAddGroups.Size = new System.Drawing.Size(150, 25);
@@ -182,18 +188,18 @@
             this.tlpBottom.Controls.Add(this.btnStart, 0, 0);
             this.tlpBottom.Controls.Add(this.btnStop, 2, 0);
             this.tlpBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpBottom.Location = new System.Drawing.Point(0, 453);
+            this.tlpBottom.Location = new System.Drawing.Point(0, 644);
             this.tlpBottom.Margin = new System.Windows.Forms.Padding(0);
             this.tlpBottom.Name = "tlpBottom";
             this.tlpBottom.RowCount = 1;
             this.tlpBottom.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpBottom.Size = new System.Drawing.Size(938, 58);
+            this.tlpBottom.Size = new System.Drawing.Size(998, 58);
             this.tlpBottom.TabIndex = 1;
             // 
             // btnStart
             // 
             this.btnStart.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnStart.Location = new System.Drawing.Point(296, 11);
+            this.btnStart.Location = new System.Drawing.Point(326, 11);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(152, 35);
             this.btnStart.TabIndex = 0;
@@ -204,7 +210,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnStop.Location = new System.Drawing.Point(489, 11);
+            this.btnStop.Location = new System.Drawing.Point(519, 11);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(152, 35);
             this.btnStop.TabIndex = 1;
@@ -224,11 +230,15 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(932, 412);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(992, 603);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.checkBox11);
+            this.panel1.Controls.Add(this.checkBox10);
             this.panel1.Controls.Add(this.checkBox9);
             this.panel1.Controls.Add(this.checkBox8);
             this.panel1.Controls.Add(this.checkBox7);
@@ -239,10 +249,40 @@
             this.panel1.Controls.Add(this.checkBox3);
             this.panel1.Controls.Add(this.checkBox2);
             this.panel1.Controls.Add(this.checkBox1);
-            this.panel1.Location = new System.Drawing.Point(700, 3);
+            this.panel1.Location = new System.Drawing.Point(744, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(223, 398);
+            this.panel1.Size = new System.Drawing.Size(245, 564);
             this.panel1.TabIndex = 1;
+            // 
+            // checkBox11
+            // 
+            this.checkBox11.AutoSize = true;
+            this.checkBox11.Location = new System.Drawing.Point(13, 373);
+            this.checkBox11.Name = "checkBox11";
+            this.checkBox11.Size = new System.Drawing.Size(215, 34);
+            this.checkBox11.TabIndex = 11;
+            this.checkBox11.Text = "Вывод статистики (откуда меньше\r\nвсего публикаций)";
+            this.checkBox11.UseVisualStyleBackColor = true;
+            // 
+            // checkBox10
+            // 
+            this.checkBox10.AutoSize = true;
+            this.checkBox10.Location = new System.Drawing.Point(13, 333);
+            this.checkBox10.Name = "checkBox10";
+            this.checkBox10.Size = new System.Drawing.Size(211, 34);
+            this.checkBox10.TabIndex = 10;
+            this.checkBox10.Text = "Установить минимальное кол-во\r\nлайков (Вывод мин/макс лайков)";
+            this.checkBox10.UseVisualStyleBackColor = true;
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.AutoSize = true;
+            this.checkBox9.Location = new System.Drawing.Point(13, 293);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(163, 34);
+            this.checkBox9.TabIndex = 9;
+            this.checkBox9.Text = "Учитывать соотношение\r\nлайков/просмотров";
+            this.checkBox9.UseVisualStyleBackColor = true;
             // 
             // checkBox8
             // 
@@ -266,13 +306,12 @@
             // 
             // btnTesting
             // 
-            this.btnTesting.Location = new System.Drawing.Point(145, 372);
+            this.btnTesting.Location = new System.Drawing.Point(164, 538);
             this.btnTesting.Name = "btnTesting";
             this.btnTesting.Size = new System.Drawing.Size(75, 23);
             this.btnTesting.TabIndex = 6;
             this.btnTesting.Text = "test";
             this.btnTesting.UseVisualStyleBackColor = true;
-            this.btnTesting.Visible = false;
             this.btnTesting.Click += new System.EventHandler(this.btnTesting_Click);
             // 
             // checkBox6
@@ -347,7 +386,7 @@
             this.tlpDataGrid.RowCount = 2;
             this.tlpDataGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpDataGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tlpDataGrid.Size = new System.Drawing.Size(691, 406);
+            this.tlpDataGrid.Size = new System.Drawing.Size(735, 597);
             this.tlpDataGrid.TabIndex = 2;
             // 
             // dgvPosts
@@ -372,6 +411,7 @@
             this.colReposts,
             this.colComments,
             this.colViews,
+            this.colLikesCTR,
             this.colPinned,
             this.colMarkedAsAds,
             this.colExistsAttachments,
@@ -386,10 +426,10 @@
             this.dgvPosts.Name = "dgvPosts";
             this.dgvPosts.ReadOnly = true;
             this.dgvPosts.RowHeadersVisible = false;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.Gray;
-            this.dgvPosts.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.Gray;
+            this.dgvPosts.RowsDefaultCellStyle = dataGridViewCellStyle14;
             this.dgvPosts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPosts.Size = new System.Drawing.Size(685, 370);
+            this.dgvPosts.Size = new System.Drawing.Size(729, 561);
             this.dgvPosts.TabIndex = 0;
             this.dgvPosts.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvPosts_CellMouseDown);
             this.dgvPosts.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvPosts_CellMouseUp);
@@ -409,9 +449,9 @@
             // colCreated
             // 
             this.colCreated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle7.Format = "g";
-            dataGridViewCellStyle7.NullValue = null;
-            this.colCreated.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Format = "g";
+            dataGridViewCellStyle8.NullValue = null;
+            this.colCreated.DefaultCellStyle = dataGridViewCellStyle8;
             this.colCreated.HeaderText = "Дата публикации";
             this.colCreated.MinimumWidth = 100;
             this.colCreated.Name = "colCreated";
@@ -450,10 +490,10 @@
             // colLikes
             // 
             this.colLikes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N0";
-            dataGridViewCellStyle8.NullValue = null;
-            this.colLikes.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle9.Format = "N0";
+            dataGridViewCellStyle9.NullValue = null;
+            this.colLikes.DefaultCellStyle = dataGridViewCellStyle9;
             this.colLikes.HeaderText = "Кол-во лайков";
             this.colLikes.MinimumWidth = 100;
             this.colLikes.Name = "colLikes";
@@ -463,10 +503,10 @@
             // colReposts
             // 
             this.colReposts.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Format = "N0";
-            dataGridViewCellStyle9.NullValue = null;
-            this.colReposts.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N0";
+            dataGridViewCellStyle10.NullValue = null;
+            this.colReposts.DefaultCellStyle = dataGridViewCellStyle10;
             this.colReposts.HeaderText = "Кол-во репостов";
             this.colReposts.MinimumWidth = 100;
             this.colReposts.Name = "colReposts";
@@ -476,10 +516,10 @@
             // colComments
             // 
             this.colComments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "N0";
-            dataGridViewCellStyle10.NullValue = null;
-            this.colComments.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.Format = "N0";
+            dataGridViewCellStyle11.NullValue = null;
+            this.colComments.DefaultCellStyle = dataGridViewCellStyle11;
             this.colComments.HeaderText = "Кол-во комментариев";
             this.colComments.MinimumWidth = 100;
             this.colComments.Name = "colComments";
@@ -489,15 +529,27 @@
             // colViews
             // 
             this.colViews.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.Format = "N0";
-            dataGridViewCellStyle11.NullValue = null;
-            this.colViews.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle12.Format = "N0";
+            dataGridViewCellStyle12.NullValue = null;
+            this.colViews.DefaultCellStyle = dataGridViewCellStyle12;
             this.colViews.HeaderText = "Кол-во просмотров";
             this.colViews.MinimumWidth = 100;
             this.colViews.Name = "colViews";
             this.colViews.ReadOnly = true;
             this.colViews.Width = 130;
+            // 
+            // colLikesCTR
+            // 
+            this.colLikesCTR.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle13.Format = "N2";
+            dataGridViewCellStyle13.NullValue = null;
+            this.colLikesCTR.DefaultCellStyle = dataGridViewCellStyle13;
+            this.colLikesCTR.HeaderText = "CTR для лайков";
+            this.colLikesCTR.MinimumWidth = 100;
+            this.colLikesCTR.Name = "colLikesCTR";
+            this.colLikesCTR.ReadOnly = true;
             // 
             // colPinned
             // 
@@ -567,7 +619,7 @@
             this.lblCount.AutoSize = true;
             this.lblCount.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblCount.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblCount.Location = new System.Drawing.Point(3, 383);
+            this.lblCount.Location = new System.Drawing.Point(3, 574);
             this.lblCount.Name = "lblCount";
             this.lblCount.Size = new System.Drawing.Size(99, 15);
             this.lblCount.TabIndex = 1;
@@ -584,9 +636,11 @@
             // 
             this.cmsPost.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiShowPostText,
-            this.tsmiShowImages});
+            this.tsmiShowImages,
+            toolStripSeparator1,
+            this.tsmiPublicate});
             this.cmsPost.Name = "cmsPost";
-            this.cmsPost.Size = new System.Drawing.Size(252, 48);
+            this.cmsPost.Size = new System.Drawing.Size(252, 98);
             // 
             // tsmiShowPostText
             // 
@@ -602,22 +656,24 @@
             this.tsmiShowImages.Text = "Просмотр изображения";
             this.tsmiShowImages.Click += new System.EventHandler(this.tsmiShowImages_Click);
             // 
-            // checkBox9
+            // tsmiPublicate
             // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(13, 293);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(163, 34);
-            this.checkBox9.TabIndex = 9;
-            this.checkBox9.Text = "Учитывать соотношение\r\nлайков/просмотров";
-            this.checkBox9.UseVisualStyleBackColor = true;
+            this.tsmiPublicate.Name = "tsmiPublicate";
+            this.tsmiPublicate.Size = new System.Drawing.Size(251, 22);
+            this.tsmiPublicate.Text = "Опубликовать";
+            this.tsmiPublicate.Click += new System.EventHandler(this.tsmiPublicate_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(938, 511);
+            this.ClientSize = new System.Drawing.Size(998, 702);
             this.Controls.Add(this.tlpMain);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Name = "frmMain";
@@ -664,6 +720,9 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiShowPostText;
         private System.Windows.Forms.ToolStripMenuItem tsmiShowImages;
         private System.Windows.Forms.Button btnTesting;
+        private System.Windows.Forms.CheckBox checkBox8;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.CheckBox checkBox9;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGroupName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn colType;
@@ -673,6 +732,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colReposts;
         private System.Windows.Forms.DataGridViewTextBoxColumn colComments;
         private System.Windows.Forms.DataGridViewTextBoxColumn colViews;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLikesCTR;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPinned;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMarkedAsAds;
         private System.Windows.Forms.DataGridViewTextBoxColumn colExistsAttachments;
@@ -680,9 +740,9 @@
         private System.Windows.Forms.DataGridViewLinkColumn colSignerLink;
         private System.Windows.Forms.DataGridViewTextBoxColumn colExistsLinks;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLinks;
-        private System.Windows.Forms.CheckBox checkBox8;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox9;
+        private System.Windows.Forms.CheckBox checkBox10;
+        private System.Windows.Forms.CheckBox checkBox11;
+        private System.Windows.Forms.ToolStripMenuItem tsmiPublicate;
     }
 }
 

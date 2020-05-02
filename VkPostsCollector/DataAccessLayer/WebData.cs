@@ -16,7 +16,9 @@ namespace VkPostsCollector.DataAccessLayer
         private WebProxy myproxy;
         private bool useProxy;
 
-        public WebHeaderCollection AdditionalHeaders = new WebHeaderCollection();
+        public WebHeaderCollection AdditionalHeaders { get; set; } = new WebHeaderCollection();
+        public bool AllowAutoRedirect { get; set; } = false;
+
 
         public WebData(WebProxy proxy = null)
         {
@@ -46,7 +48,7 @@ namespace VkPostsCollector.DataAccessLayer
                 else webRequest.Proxy = null;
                 webRequest.Method = "GET";
                 webRequest.ProtocolVersion = HttpVersion.Version11;
-                webRequest.AllowAutoRedirect = false;
+                webRequest.AllowAutoRedirect = AllowAutoRedirect;
                 webRequest.CookieContainer = cc;
                 webRequest.ProtocolVersion = HttpVersion.Version10;
                 webRequest.KeepAlive = true;

@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using VkPostsCollector.ApplicationLayer.Common;
 using VkPostsCollector.BusinessLayer;
 using System.Diagnostics;
 using VkPostsCollector.DataAccessLayer.API;
 using VkPostsCollector.ApplicationLayer.Forms;
+using VkPostsCollector.ApplicationLayer;
 
 namespace ApplicationLayer.VkPostsCollector
 {
     public partial class frmMain : Form
     {
-        private string TestGroup = "top_ali_shmot";
-        private const string AccessToken = "20e0e7e620e0e7e620e0e7e6e420901b4d220e020e0e7e67e72e2ea810c2598e177d57b";
-
         private BackgroundWorker worker;
 
         private DataGridViewRow lastSelectedRow;
@@ -30,6 +25,7 @@ namespace ApplicationLayer.VkPostsCollector
         public frmMain()
         {
             InitializeComponent();
+            Configs.GroupsLoad();
             InitForm();
         }
 
@@ -70,7 +66,10 @@ namespace ApplicationLayer.VkPostsCollector
             btnStart.Enabled = true;
             btnStop.Enabled = false;
 
-            dgvPosts.SelectedRows[0].Selected = false;
+            if (dgvPosts.SelectedRows.Count > 0)
+            {
+                dgvPosts.SelectedRows[0].Selected = false;
+            }
 
             MessageBox.Show("Сбор постов завершен");
         }
@@ -78,23 +77,34 @@ namespace ApplicationLayer.VkPostsCollector
         private void Collector_DoWork(object sender, DoWorkEventArgs e)
         {
             int RequestedQuantity = (int)nudQuantity.Value;
-            int CollectedQuantity = 0;
             
-            while(CollectedQuantity < RequestedQuantity)
+            for (int g = 0; g < Configs.Groups.Count; g++)
             {
-                int CurrentQuantity = RequestedQuantity - CollectedQuantity;
-                if (CurrentQuantity > 100) CurrentQuantity = 100;
+                int CollectedQuantity = 0;
 
-                List<PublicationDTO> publications = VkAPI.GetWallPosts(TestGroup, CurrentQuantity, CollectedQuantity, AccessToken);
+                while (CollectedQuantity < RequestedQuantity)
+                {
+                    int CurrentQuantity = RequestedQuantity - CollectedQuantity;
+                    if (CurrentQuantity > 100) CurrentQuantity = 100;
 
-                for (int i = 0; i < publications.Count; i++)
-                    AddRow(publications[i]);
+                    List<VkPublicationDTO> publications = VkAPI.GetWallPosts(Configs.Groups[g], CurrentQuantity, CollectedQuantity, Configs.AccessToken);
 
-                CollectedQuantity += CurrentQuantity;
+                    if (publications != null)
+                    {
+                        for (int i = 0; i < publications.Count; i++)
+                            AddRow(publications[i]);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка во время сбора публикаций");
+                    }
+
+                    CollectedQuantity += CurrentQuantity;
+                }
             }
         }
 
-        private void AddRow(PublicationDTO publication)
+        private void AddRow(VkPublicationDTO publication)
         {
             dgvPosts.Invoke(new MethodInvoker(() =>
             {
@@ -102,15 +112,16 @@ namespace ApplicationLayer.VkPostsCollector
                 DataGridViewRow pRow = dgvPosts.Rows[NewRowIndex];
                 pRow.Tag = publication;
 
-                pRow.Cells["colGroupName"].Value = publication.GroupName;
+                pRow.Cells["colGroupName"].Value = publication.Group.Name;
                 pRow.Cells["colCreated"].Value = publication.Created;
                 pRow.Cells["colType"].Value = publication.PostType + (publication.IsRepost ? " (Repost)" : string.Empty);
-                pRow.Cells["colGroupLink"].Value = publication.GroupLink;
+                pRow.Cells["colGroupLink"].Value = publication.Group.URL;
                 pRow.Cells["colPublicationLink"].Value = publication.PostLink;
                 pRow.Cells["colLikes"].Value = publication.Likes;
                 pRow.Cells["colReposts"].Value = publication.Reposts;
                 pRow.Cells["colComments"].Value = publication.Comments;
                 pRow.Cells["colViews"].Value = publication.Views;
+                pRow.Cells["colLikesCTR"].Value = Math.Round(publication.Likes / publication.Views, 4, MidpointRounding.ToEven) + "%";
                 pRow.Cells["colPinned"].Value = Converters.BoolToText(publication.IsPinned);
                 pRow.Cells["colMarkedAsAds"].Value = Converters.BoolToText(publication.MarkedAsAds);
                 pRow.Cells["colExistsAttachments"].Value = Converters.BoolToText(publication.ExistsAttachments);
@@ -130,7 +141,14 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void btnAddGroups_Click(object sender, EventArgs e)
         {
-
+            using (frmGroups frmGroups = new frmGroups(Configs.AccessToken))
+            {
+                if (frmGroups.ShowDialog() == DialogResult.OK)
+                {
+                    Configs.Groups = frmGroups.Groups;
+                    Configs.GroupsSave();
+                }
+            }
         }
 
         private void btnFiltres_Click(object sender, EventArgs e)
@@ -262,27 +280,40 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void tsmiShowPostText_Click(object sender, EventArgs e)
         {
-            PublicationDTO publication = (PublicationDTO)dgvPosts.SelectedRows[0].Tag;
+            VkPublicationDTO publication = (VkPublicationDTO)dgvPosts.SelectedRows[0].Tag;
 
             MessageBox.Show(publication.Text, "Содержимое записи");
         }
 
         private void tsmiShowImages_Click(object sender, EventArgs e)
         {
-            PublicationDTO publication = (PublicationDTO)dgvPosts.SelectedRows[0].Tag;
-
-            //MessageBox.Show(string.Join("\r\n", publication.ImageLinks), "Изображения");
+            VkPublicationDTO publication = (VkPublicationDTO)dgvPosts.SelectedRows[0].Tag;
+            
             frmImages imagesPanel = new frmImages();
             imagesPanel.AddImageRange(publication.ImageLinks.ToArray());
-            imagesPanel.Show();
+            imagesPanel.Show(this);
         }
 
+        private void tsmiPublicate_Click(object sender, EventArgs e)
+        {
+            VkPublicationDTO publication = (VkPublicationDTO)dgvPosts.SelectedRows[0].Tag;
+
+            TelegramPublicationDTO telegramPost = PublicationCreator.CreateTelegramPublication(publication);
+
+            if(telegramPost != null)
+            {
+                MessageBox.Show("TelegramPublicationDTO объект создан.\r\nNo next action");
+            }
+        }
 
         #endregion
 
         private void btnTesting_Click(object sender, EventArgs e)
         {
-            string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", "https://aliexpress.ru/item/32822822772.html");
+            //string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", "https://aliexpress.ru/item/32822822772.html");
+            string cleanLink = AdmitadAPI.GetCleanUrl("http://ali.ms/AuE6");
+            string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", cleanLink);
+            string ShortPartnerUrl = IsgdAPI.ShortUrl(link);
         }
     }
 }
