@@ -69,7 +69,7 @@ namespace VkPostsCollector.ApplicationLayer.Forms
             nudMaxQuantityPostsDaily.Value = Configs.PublicationFilters.MaxQuantityPostsDaily > -1 ? Configs.PublicationFilters.MaxQuantityPostsDaily : 0;
 
             cbMinQuantityPostsDaily.Checked = Configs.PublicationFilters.MinQuantityPostsDaily > -1;
-            nudMinQuantityPostsDaily.Value = Configs.PublicationFilters.MinQuantityPostsDaily > -1 ? Configs.PublicationFilters.MinQuantityPostsDaily : 0;
+            nudMinQuantityPostsDaily.Value = Configs.PublicationFilters.MinQuantityPostsDaily > -1 ? Configs.PublicationFilters.MinQuantityPostsDaily : nudMinQuantityPostsDaily.Minimum;
             
             nudQuantityProcessLastPostsPerGroup.Value = Configs.PublicationFilters.QuantityProcessLastPostsPerGroup;
 
