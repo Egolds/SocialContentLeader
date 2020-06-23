@@ -18,7 +18,7 @@ namespace VkPostsCollector.DataAccessLayer.API
 
             string htmlBody = getResponese.Content;
             string[] htmlLines = Regex.Split(htmlBody, "\n");
-            string targetLine = htmlLines.First(x => x.Contains("canonical"));
+            string targetLine = htmlLines.FirstOrDefault(x => x.Contains("canonical"));
             if(string.IsNullOrEmpty(targetLine) == false)
             {
                 cleanLink = Regex.Match(targetLine, "http([^(]*).html").Groups[0].Value;
@@ -34,9 +34,6 @@ namespace VkPostsCollector.DataAccessLayer.API
 
             string baseUrl = PartenerLink + parameter + WebUtility.UrlEncode(ProductURL);
             return baseUrl;
-
-            // https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/
-            // https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/?ulp=https%3A%2F%2Faliexpress.ru%2Fitem%2F32822822772.html
         }
     }
 }

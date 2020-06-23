@@ -63,10 +63,27 @@ namespace VkPostsCollector.BusinessLayer
         public decimal Likes { get; set; }
         public decimal Reposts { get; set; }
         public decimal Views { get; set; }
+
+        public decimal LikesCTR
+        {
+            get
+            {
+                return Math.Round(Likes / Views, 5, MidpointRounding.ToEven);
+            }
+        }
+
+        // TODO: add ExistsSmiles, ExistsHashtags
     }
 
     public class TelegramPublicationDTO
     {
+        public bool CanPublicate { get; set; } = true;
+
+        //public bool IsPublicated { get; set; } = false;
+        public string Error { get; set; } = string.Empty;
+
+        public VkPublicationDTO VkPublication { get; set; }
+
         public string Text { get; set; }
         public string PhotoUrl { get; set; }
         public List<string> Links { get; set; } = new List<string>();
@@ -85,14 +102,5 @@ namespace VkPostsCollector.BusinessLayer
         public string Name { get; set; }
 
         public string PhotoUrl { get; set; }
-    }
-
-    public class AuthEpnDTO
-    {
-        public string ssid_token { get; set; }
-
-        public string access_token { get; set; }
-        public string token_type { get; set; }
-        public string refresh_token { get; set; }
     }
 }

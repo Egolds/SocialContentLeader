@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using VkPostsCollector.ApplicationLayer.Common;
-using VkPostsCollector.BusinessLayer;
-using System.Diagnostics;
-using VkPostsCollector.DataAccessLayer.API;
-using VkPostsCollector.ApplicationLayer.Forms;
 using VkPostsCollector.ApplicationLayer;
+using VkPostsCollector.ApplicationLayer.Common;
+using VkPostsCollector.ApplicationLayer.Forms;
+using VkPostsCollector.BotLayer;
+using VkPostsCollector.BusinessLayer;
+using VkPostsCollector.DataAccessLayer.API;
 
 namespace ApplicationLayer.VkPostsCollector
 {
     public partial class frmMain : Form
     {
         private BackgroundWorker worker;
+        private TelegramPosterBot bot;
 
         private DataGridViewRow lastSelectedRow;
         private bool NeedUnselectRow = false;
@@ -26,6 +28,7 @@ namespace ApplicationLayer.VkPostsCollector
         {
             InitializeComponent();
             Configs.GroupsLoad();
+            Configs.FiltersLoad();
             InitForm();
         }
 
@@ -36,6 +39,8 @@ namespace ApplicationLayer.VkPostsCollector
 
             FillContextMenu();
             UpdatePostsCount();
+
+            cbAutobotMode_CheckedChanged(null, null);
         }
 
         private void FillContextMenu()
@@ -63,6 +68,7 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            tlpHeader.Enabled = true;
             btnStart.Enabled = true;
             btnStop.Enabled = false;
 
@@ -104,7 +110,7 @@ namespace ApplicationLayer.VkPostsCollector
             }
         }
 
-        private void AddRow(VkPublicationDTO publication)
+        private void AddRow(VkPublicationDTO publication, bool IsPublicated = false)
         {
             dgvPosts.Invoke(new MethodInvoker(() =>
             {
@@ -129,7 +135,9 @@ namespace ApplicationLayer.VkPostsCollector
                 pRow.Cells["colSignerLink"].Value = publication.SignerLink;
                 pRow.Cells["colLinks"].Value = string.Join(" ", publication.Links);
                 pRow.Cells["colExistsLinks"].Value = Converters.BoolToText(publication.ExistsLinks);
-        }));
+
+                pRow.Cells["colIsPublicated"].Value = Converters.BoolToText(IsPublicated);
+            }));
         }
 
         private void UpdatePostsCount()
@@ -153,7 +161,34 @@ namespace ApplicationLayer.VkPostsCollector
 
         private void btnFiltres_Click(object sender, EventArgs e)
         {
+            new frmFilters().ShowDialog();
+        }
 
+        private void cbAutobotMode_CheckedChanged(object sender, EventArgs e)
+        {
+            nudQuantity.Enabled = !cbAutobotMode.Checked;
+            colIsPublicated.Visible = cbAutobotMode.Checked;
+
+            if (cbAutobotMode.Checked)
+            {
+                btnStart.Text = "Запустить бота";
+                btnStop.Text = "Остановть бота";
+            }
+            else
+            {
+                btnStart.Text = "Запустить сбор";
+                btnStop.Text = "Остановть сбор";
+            }
+
+            for (int i = 0; i < cmsPostsColumns.Items.Count; i++)
+            {
+                DataGridViewColumn column = (DataGridViewColumn)cmsPostsColumns.Items[i].Tag;
+                if (column.Name == "colIsPublicated")
+                {
+                    cmsPostsColumns.Items[i].Visible = cbAutobotMode.Checked;
+                    (cmsPostsColumns.Items[i] as ToolStripMenuItem).Checked = cbAutobotMode.Checked;
+                }
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -164,15 +199,37 @@ namespace ApplicationLayer.VkPostsCollector
 
             dgvPosts.Rows.Clear();
 
+            tlpHeader.Enabled = false;
             btnStart.Enabled = false;
             btnStop.Enabled = true;
 
-            StartCollection();
-        }
+            if (cbAutobotMode.Checked == false)
+            {
+                StartCollection();
+            }
+            else
+            {
+                bot = new TelegramPosterBot(Configs.PublicationFilters.PublicateTimeFrom, Configs.PublicationFilters.PublicateTimeTo);
+                bot.OnPublicationSended += Bot_OnPublicationSended;
+                bot.OnPublicationCanceled += Bot_OnPublicationCanceled;
+                bot.OnLogWrite += Bot_OnLogWrite;
 
+                bot.Start();
+            }
+        }
+        
         private void btnStop_Click(object sender, EventArgs e)
         {
-            worker.CancelAsync();
+            if (cbAutobotMode.Checked == false)
+                worker.CancelAsync();
+            else
+            {
+                bot.Stop();
+
+                btnStart.Enabled = true;
+                btnStop.Enabled = false;
+                tlpHeader.Enabled = true;
+            }
         }
         
         #region -- DataGrid --
@@ -264,6 +321,11 @@ namespace ApplicationLayer.VkPostsCollector
             ((DataGridViewColumn)tsmi.Tag).Visible = !((DataGridViewColumn)tsmi.Tag).Visible;
         }
 
+        private void cmsPostsColumns_Opening(object sender, CancelEventArgs e)
+        {
+            
+        }
+
         private void dgvPosts_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             UpdatePostsCount();
@@ -277,6 +339,8 @@ namespace ApplicationLayer.VkPostsCollector
 
 
         #endregion
+
+        #region -- Context Menu --
 
         private void tsmiShowPostText_Click(object sender, EventArgs e)
         {
@@ -294,26 +358,65 @@ namespace ApplicationLayer.VkPostsCollector
             imagesPanel.Show(this);
         }
 
-        private void tsmiPublicate_Click(object sender, EventArgs e)
+        private void tsmiPublicate_ClickAsync(object sender, EventArgs e)
         {
             VkPublicationDTO publication = (VkPublicationDTO)dgvPosts.SelectedRows[0].Tag;
 
             TelegramPublicationDTO telegramPost = PublicationCreator.CreateTelegramPublication(publication);
-
-            if(telegramPost != null)
+            
+            if(telegramPost == null)
             {
-                MessageBox.Show("TelegramPublicationDTO объект создан.\r\nNo next action");
+                MessageBox.Show("Ошибка публикации.");
+                return;
             }
+            else if(telegramPost.Error.Length > 0)
+            {
+                MessageBox.Show(telegramPost.Error);
+                return;
+            }
+            else if (telegramPost.CanPublicate == false)
+            {
+                MessageBox.Show("Публикация отклонена. Не соответствует фильтру.");
+                return;
+            }
+
+            bool ExistsImage = false;
+            if (telegramPost.PhotoUrl != null && telegramPost.PhotoUrl != string.Empty)
+                ExistsImage = true;
+
+            TelegramAPI.SendPublicationAsync(telegramPost, ExistsImage);
         }
 
         #endregion
 
+        #endregion
+
+        private void Bot_OnLogWrite(string LOG)
+        {
+            tbLog.Invoke(new MethodInvoker(() =>
+            {
+                tbLog.Text += $"[{bot.CurrentTime.ToString("hh\\:mm\\:ss")}]: " + LOG + "\r\n\r\n";
+                tbLog.Select(tbLog.Text.Length, 0);
+                tbLog.ScrollToCaret();
+            }));
+        }
+
+        private void Bot_OnPublicationSended(TelegramPublicationDTO telegramPublicationDTO)
+        {
+            AddRow(telegramPublicationDTO.VkPublication, true);
+        }
+
+        private void Bot_OnPublicationCanceled(TelegramPublicationDTO telegramPublicationDTO)
+        {
+            AddRow(telegramPublicationDTO.VkPublication, false);
+        }
+
         private void btnTesting_Click(object sender, EventArgs e)
         {
-            //string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", "https://aliexpress.ru/item/32822822772.html");
-            string cleanLink = AdmitadAPI.GetCleanUrl("http://ali.ms/AuE6");
-            string link = AdmitadAPI.CreateUrl("https://alitems.com/g/1e8d114494bd0482fb1316525dc3e8/", cleanLink);
-            string ShortPartnerUrl = IsgdAPI.ShortUrl(link);
+            TelegramPosterBot bot = new TelegramPosterBot(Configs.PublicationFilters.PublicateTimeFrom, Configs.PublicationFilters.PublicateTimeTo);
+            bot.Start();
         }
+
+        
     }
 }
