@@ -1195,6 +1195,7 @@
             this.Name = "frmFilters";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmFilters";
+            this.Load += new System.EventHandler(this.frmFilters_Load);
             this.tlpMain.ResumeLayout(false);
             this.tlpActions.ResumeLayout(false);
             this.panelMain.ResumeLayout(false);

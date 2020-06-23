@@ -19,13 +19,16 @@ namespace VkPostsCollector.ApplicationLayer.Forms
         {
             InitializeComponent();
 
+            
+        }
+
+        private void frmFilters_Load(object sender, EventArgs e)
+        {
             LoadParameters();
         }
 
         private void LoadParameters()
         {
-            nudQuantityPostsFromGroup_ValueChanged(null, null);
-
             cbMaxQuantityAdLinks.Checked = Configs.PublicationFilters.MaxQuantityAdLinks > -1;
             nudMaxQuantityAdLinks.Value = Configs.PublicationFilters.MaxQuantityAdLinks > -1 ? Configs.PublicationFilters.MaxQuantityAdLinks : 0;
 
@@ -62,19 +65,21 @@ namespace VkPostsCollector.ApplicationLayer.Forms
 
             cmbPriority.SelectedIndex = (int)Configs.PublicationFilters.Priority;
 
+            cbMinQuantityPostsDaily.Checked = Configs.PublicationFilters.MinQuantityPostsDaily > -1;
+            nudMinQuantityPostsDaily.Value = Configs.PublicationFilters.MinQuantityPostsDaily > -1 ? Configs.PublicationFilters.MinQuantityPostsDaily : 1;
+
             cbQuantityPostsFromGroup.Checked = Configs.PublicationFilters.QuantityPostsFromGroup > -1;
             nudQuantityPostsFromGroup.Value = Configs.PublicationFilters.QuantityPostsFromGroup > -1 ? Configs.PublicationFilters.QuantityPostsFromGroup : 0;
 
             cbMaxQuantityPostsDaily.Checked = Configs.PublicationFilters.MaxQuantityPostsDaily > -1;
             nudMaxQuantityPostsDaily.Value = Configs.PublicationFilters.MaxQuantityPostsDaily > -1 ? Configs.PublicationFilters.MaxQuantityPostsDaily : 0;
-
-            cbMinQuantityPostsDaily.Checked = Configs.PublicationFilters.MinQuantityPostsDaily > -1;
-            nudMinQuantityPostsDaily.Value = Configs.PublicationFilters.MinQuantityPostsDaily > -1 ? Configs.PublicationFilters.MinQuantityPostsDaily : 1;
             
             nudQuantityProcessLastPostsPerGroup.Value = Configs.PublicationFilters.QuantityProcessLastPostsPerGroup;
 
             dtpPublicateTimeFrom.Value = DateTime.Now.Date + Configs.PublicationFilters.PublicateTimeFrom;
             dtpPublicateTimeTo.Value = DateTime.Now.Date + Configs.PublicationFilters.PublicateTimeTo;
+
+            nudQuantityPostsFromGroup_ValueChanged(null, null);
         }
 
         private void SaveParameters()
@@ -180,5 +185,6 @@ namespace VkPostsCollector.ApplicationLayer.Forms
         {
             nudQuantityPostsFromGroup_ValueChanged(sender, e);
         }
+        
     }
 }
